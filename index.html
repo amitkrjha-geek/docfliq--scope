@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>docfliq 2.0 — AI User Journey Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#101A2B; --ink-2:#3A475B; --ink-3:#6B7689; --ink-4:#9AA3B2;
+    --paper:#F4F6F9; --card:#FFFFFF; --line:#E2E7EF; --line-2:#EDF0F6;
+    --hcp:#2747D6; --kol:#0C9B89; --pharma:#B07514; --admin:#6E3DBE;
+    --gate:#C32F4C; --decision:#222E42; --signal:#4338CA;
+    --hcp-soft:#EDF1FD; --kol-soft:#E5F6F2; --pharma-soft:#FBF3E2;
+    --admin-soft:#F2EAFB; --gate-soft:#FBECEF; --signal-soft:#EDEBFB; --dec-soft:#EEF1F6;
+    --serif:'Newsreader', Georgia, 'Times New Roman', serif;
+    --sans:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --mono:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    --shadow:0 1px 2px rgba(16,26,43,.04), 0 4px 16px rgba(16,26,43,.04);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto;}}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.62; -webkit-font-smoothing:antialiased;}
+  a{color:var(--hcp); text-decoration:none;}
+
+  .topbar{position:sticky; top:0; z-index:60; background:rgba(255,255,255,.86); backdrop-filter:saturate(140%) blur(8px); border-bottom:1px solid var(--line);}
+  .topbar-inner{max-width:1280px; margin:0 auto; padding:14px 28px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .brand{font-weight:700; font-size:20px; letter-spacing:-.02em; color:var(--ink);}
+  .brand b{color:var(--hcp);}
+  .topbar-tag{font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); border:1px solid var(--line); border-radius:999px; padding:5px 11px;}
+
+  .hero{max-width:1280px; margin:0 auto; padding:54px 28px 30px;}
+  .hero .kicker{font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--hcp); margin-bottom:18px;}
+  .hero h1{font-family:var(--serif); font-weight:500; font-size:clamp(34px,5vw,56px); line-height:1.04; letter-spacing:-.015em; margin:0 0 18px; max-width:18ch;}
+  .hero h1 em{font-style:italic; color:var(--ink-2);}
+  .hero-lead{font-size:18px; line-height:1.55; color:var(--ink-2); max-width:64ch; margin:0 0 26px;}
+  .rulebanner{display:flex; gap:16px; align-items:flex-start; background:var(--card); border:1px solid var(--line); border-left:3px solid var(--gate); border-radius:12px; padding:18px 20px; max-width:760px; box-shadow:var(--shadow);}
+  .rulebanner .rb-icon{flex:none; width:34px; height:34px; border-radius:8px; background:var(--gate-soft); color:var(--gate); display:grid; place-items:center; font-family:var(--mono); font-weight:600; font-size:15px;}
+  .rulebanner .rb-title{font-weight:600; font-size:15px; margin:0 0 3px;}
+  .rulebanner p{margin:0; color:var(--ink-2); font-size:14px;}
+  .hero-meta{display:flex; flex-wrap:wrap; gap:10px; margin-top:24px;}
+  .metachip{font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); background:var(--card); border:1px solid var(--line); border-radius:6px; padding:6px 10px;}
+
+  .shell{max-width:1280px; margin:0 auto; padding:18px 28px 90px; display:grid; grid-template-columns:248px 1fr; gap:44px; align-items:start;}
+  .toc{position:sticky; top:78px;}
+  .toc h4{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin:0 0 12px;}
+  .toc ol{list-style:none; margin:0 0 22px; padding:0; counter-reset:toc;}
+  .toc li{counter-increment:toc; margin:1px 0;}
+  .toc a{display:flex; gap:10px; align-items:baseline; padding:7px 10px; border-radius:8px; color:var(--ink-2); font-size:13.5px; line-height:1.3; border:1px solid transparent;}
+  .toc a::before{content:counter(toc,decimal-leading-zero); font-family:var(--mono); font-size:11px; color:var(--ink-4); flex:none;}
+  .toc a:hover{background:var(--card); border-color:var(--line); color:var(--ink);}
+  .toc a.active{background:var(--hcp-soft); color:var(--hcp); border-color:transparent;}
+  .toc a.active::before{color:var(--hcp);}
+  .toc .toc-found a::before{content:"§";}
+  .legend-box{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; box-shadow:var(--shadow);}
+  .legend-box h4{margin:0 0 8px;}
+  .legend-box .lg-note{font-size:11.5px; color:var(--ink-2); line-height:1.45; margin:0 0 10px;}
+  .legend-row{display:flex; align-items:center; gap:9px; font-size:12px; color:var(--ink-2); margin:7px 0;}
+  .lg-sw{flex:none; width:18px; height:14px; border-radius:3px; border:1px solid var(--line); border-left:3px solid var(--ink-4);}
+  .lg-sw.hcp{border-left-color:var(--hcp);} .lg-sw.kol{border-left-color:var(--kol);} .lg-sw.pharma{border-left-color:var(--pharma);} .lg-sw.admin{border-left-color:var(--admin);}
+  .lg-sw.dec{border-style:dashed; border-left:3px solid var(--decision);} .lg-sw.gate{border-left:3px solid var(--gate); background:var(--gate-soft);} .lg-sw.out{border-left:3px solid var(--ink); background:#F8F9FB;}
+  .main{min-width:0;}
+
+  section{scroll-margin-top:84px; margin-bottom:26px;}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:30px 32px; box-shadow:var(--shadow);}
+  .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);}
+  h2.sec-title{font-family:var(--serif); font-weight:500; font-size:30px; letter-spacing:-.01em; margin:6px 0 0;}
+  .sec-intent{color:var(--ink-2); font-size:15.5px; margin:8px 0 0; max-width:72ch;}
+
+  .feature-head{display:grid; grid-template-columns:auto 1fr; gap:22px; align-items:flex-start; margin-bottom:22px;}
+  .feature-num{font-family:var(--mono); font-weight:500; font-size:30px; color:var(--ink-4); line-height:1; padding-top:4px;}
+  .role-row{display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; align-items:center;}
+  .role{font-family:var(--mono); font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; padding:4px 9px; border-radius:6px;}
+  .role--hcp{background:var(--hcp-soft); color:var(--hcp);} .role--kol{background:var(--kol-soft); color:var(--kol);}
+  .role--pharma{background:var(--pharma-soft); color:var(--pharma);} .role--admin{background:var(--admin-soft); color:var(--admin);}
+  .role--system{background:#EEF1F6; color:var(--ink-2);}
+  .sig{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; color:var(--signal); background:var(--signal-soft); border-radius:6px; padding:4px 9px;}
+  .sig::before{content:"\25C8"; font-size:10px;}
+
+  /* ============ FLOWCHART ============ */
+  .fc-wrap{overflow-x:auto; overflow-y:hidden; padding:8px 2px 12px;}
+  .fc-wrap::-webkit-scrollbar{height:9px;}
+  .fc-wrap::-webkit-scrollbar-thumb{background:#D5DCE6; border-radius:8px;}
+  .fc-wrap::-webkit-scrollbar-track{background:transparent;}
+  .flow-col{display:flex; flex-direction:column; align-items:center; width:fit-content; min-width:100%; margin:0 auto;}
+  .flow-col > .fc{position:relative; display:flex; flex-direction:column; align-items:center; width:100%;}
+  .flow-col > .fc + .fc{margin-top:16px;}
+  .flow-col > .fc + .fc::before{content:""; position:absolute; bottom:100%; left:50%; width:2px; height:16px; background:var(--line); transform:translateX(-1px);}
+
+  .scard{width:256px; max-width:100%; background:var(--card); border:1px solid var(--line); border-left:3px solid var(--ink-4); border-radius:11px; padding:12px 14px; text-align:left;}
+  .scard.r-hcp{border-left-color:var(--hcp);} .scard.r-kol{border-left-color:var(--kol);}
+  .scard.r-pharma{border-left-color:var(--pharma);} .scard.r-admin{border-left-color:var(--admin);} .scard.r-system{border-left-color:#5A6678;}
+  .sc-head{display:flex; align-items:center; flex-wrap:wrap; gap:7px; margin-bottom:3px;}
+  .sc-title{font-weight:600; font-size:14px; color:var(--ink);}
+  .sc-body{margin:4px 0 0; font-size:12.8px; color:var(--ink-2); line-height:1.5;}
+  .sc-body code{font-family:var(--mono); font-size:11.5px; background:var(--line-2); padding:1px 5px; border-radius:4px; color:var(--ink);}
+  .scard .sig{margin-top:8px;}
+
+  .dcard{border:1px dashed #CBD3E0; border-left:3px solid var(--decision); background:var(--dec-soft);}
+  .sc-eyebrow{font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; display:flex; align-items:center; gap:6px; margin-bottom:4px; color:var(--ink-3);}
+  .dcard .sc-eyebrow::before{content:""; width:10px; height:10px; transform:rotate(45deg); border:1.5px solid var(--decision); display:inline-block; border-radius:2px;}
+  .gcard{border:1px solid #F1D2D8; border-left:3px solid var(--gate); background:var(--gate-soft);}
+  .gcard .sc-eyebrow{color:var(--gate);}
+  .ocard{border:1px solid var(--line); border-left:3px solid var(--ink); background:#F8F9FB;}
+  .ocard .sc-eyebrow{color:var(--ink-2);}
+
+  .gate-pills{display:flex; flex-wrap:wrap; gap:7px; margin-top:9px;}
+  .gp{font-family:var(--mono); font-size:10px; padding:4px 8px; border-radius:6px; border:1px solid var(--line); background:#fff;}
+  .gp.ok{color:var(--kol); border-color:#BFE6DF;}
+  .gp.no{color:var(--gate); border-color:#F0CDD4;}
+
+  .dest-grid{display:flex; flex-wrap:wrap; gap:8px; margin-top:9px;}
+  .dest{font-family:var(--mono); font-size:11px; font-weight:500; padding:6px 10px; border-radius:7px; background:#fff; border:1px solid var(--line); color:var(--ink-2); display:flex; align-items:center; gap:7px;}
+  .dest .tag-later{font-size:9px; letter-spacing:.06em; color:var(--pharma); background:var(--pharma-soft); border-radius:4px; padding:2px 5px;}
+
+  .trunk{display:block; width:2px; height:16px; background:var(--line);}
+  .fork-cols{display:flex; align-items:flex-start; justify-content:center;}
+  .fork-cols.merge{align-items:stretch;}
+  .fork-col{flex:0 0 auto; position:relative; padding:16px 10px 0; border-top:2px solid var(--line); display:flex; flex-direction:column; align-items:center;}
+  .fork-col > .riser{position:absolute; top:0; left:50%; width:2px; height:16px; background:var(--line); transform:translateX(-1px);}
+  .fork-col:first-child{border-top-color:transparent;}
+  .fork-col:last-child{border-top-color:transparent;}
+  .fork-col:first-child::before, .fork-col:last-child::before{content:""; position:absolute; top:-2px; height:2px; background:var(--line); width:50%;}
+  .fork-col:first-child::before{right:0;}
+  .fork-col:last-child::before{left:0;}
+  .fork-col:only-child{border-top-color:transparent;}
+  .fork-col:only-child::before{display:none;}
+  .fork-col:only-child > .riser{display:none;}
+  .fork-cols.merge .fork-col{padding-bottom:16px;}
+  .fork-cols.merge .fork-col > .riser-b{position:absolute; bottom:0; left:50%; width:2px; height:16px; background:var(--line); transform:translateX(-1px);}
+  .fork-cols.merge .fork-col::after{content:""; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--line);}
+  .fork-cols.merge .fork-col:first-child::after{left:50%;}
+  .fork-cols.merge .fork-col:last-child::after{right:50%;}
+  .fill{display:block; flex:1 1 auto; width:2px; min-height:10px; background:var(--line);}
+
+  .bpill{position:relative; font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.05em; color:var(--ink-2); background:#fff; border:1px solid var(--line); border-radius:6px; padding:4px 10px; margin-bottom:16px; white-space:nowrap; text-align:center;}
+  .bpill::after{content:""; position:absolute; top:100%; left:50%; width:2px; height:16px; background:var(--line); transform:translateX(-1px);}
+  .bpill.yes{color:var(--kol); border-color:#BFE6DF;}
+  .bpill.no{color:var(--gate); border-color:#F0CDD4;}
+
+  /* notes */
+  .note{display:flex; gap:11px; background:#FFFBEF; border:1px solid #F3E6C2; border-radius:10px; padding:12px 14px; margin:16px 0;}
+  .note .n-tag{flex:none; font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.06em; color:#9A6B12; background:#FBF0D6; border-radius:5px; padding:4px 7px; height:fit-content;}
+  .note p{margin:0; font-size:13px; color:#6B5417;}
+  .note p b{color:#4F3D0E;}
+  .guard{display:flex; gap:11px; background:var(--gate-soft); border:1px solid #F1D2D8; border-radius:10px; padding:12px 14px; margin:16px 0;}
+  .guard .n-tag{flex:none; font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.06em; color:var(--gate); background:#fff; border:1px solid #F1D2D8; border-radius:5px; padding:4px 7px; height:fit-content;}
+  .guard p{margin:0; font-size:13px; color:#7A2233;}
+
+  /* foundations specials */
+  .found-block{margin-top:26px;}
+  .found-block:first-of-type{margin-top:18px;}
+  .found-head{display:flex; align-items:baseline; gap:11px; margin-bottom:12px;}
+  .found-head .fh-num{font-family:var(--mono); font-size:12px; color:var(--admin); font-weight:600;}
+  .found-head h3{font-family:var(--serif); font-weight:600; font-size:21px; margin:0; letter-spacing:-.005em;}
+  .found-sub{color:var(--ink-2); font-size:14px; margin:-4px 0 14px;}
+  .layer-cards{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .layer{border:1px solid var(--line); border-radius:12px; padding:16px 17px; background:#FAFBFD;}
+  .layer.l1{border-top:3px solid var(--admin);} .layer.l2{border-top:3px solid var(--hcp);}
+  .layer .l-eyebrow{font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3);}
+  .layer h5{font-size:15px; margin:5px 0 7px;}
+  .layer p{font-size:13px; color:var(--ink-2); margin:0 0 9px;}
+  .owner{font-family:var(--mono); font-size:11px; padding:4px 9px; border-radius:6px; display:inline-block;}
+  .owner.admin{background:var(--admin-soft); color:var(--admin);} .owner.hcp{background:var(--hcp-soft); color:var(--hcp);}
+  .matrix{width:100%; border-collapse:separate; border-spacing:0; margin-top:14px; font-size:12.5px;}
+  .matrix th, .matrix td{border:1px solid var(--line); padding:10px 12px; text-align:left; vertical-align:top;}
+  .matrix thead th{background:#F4F6F9; font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-2); font-weight:600;}
+  .matrix tbody th{background:#FAFBFD; font-weight:600;}
+  .matrix .tier-pill{font-family:var(--mono); font-size:10px; padding:2px 7px; border-radius:5px; background:var(--admin-soft); color:var(--admin); display:inline-block; margin-bottom:3px;}
+  .matrix td b{color:var(--ink);} .matrix td span{color:var(--ink-3); font-size:11.5px;}
+  .perm{width:100%; border-collapse:separate; border-spacing:0; margin-top:14px; font-size:13px;}
+  .perm th, .perm td{border-bottom:1px solid var(--line); padding:11px 12px; text-align:left;}
+  .perm thead th{font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-3); font-weight:600;}
+  .perm td:first-child{font-weight:600;}
+  .can{color:var(--kol); font-weight:500;} .cant{color:var(--ink-4);} .propose{color:var(--pharma); font-weight:500;}
+  .pipe{display:flex; flex-wrap:wrap; align-items:stretch; gap:0; margin-top:14px;}
+  .pipe-step{flex:1; min-width:150px; background:#FAFBFD; border:1px solid var(--line); border-radius:11px; padding:13px 14px; position:relative; margin-right:22px; margin-bottom:14px;}
+  .pipe-step:last-child{margin-right:0;}
+  .pipe-step::after{content:"\2192"; position:absolute; right:-19px; top:50%; transform:translateY(-50%); color:var(--ink-4); font-size:16px;}
+  .pipe-step:last-child::after{display:none;}
+  .pipe-step .ps-num{font-family:var(--mono); font-size:11px; color:var(--admin); font-weight:600;}
+  .pipe-step h6{font-size:13.5px; margin:5px 0 5px;}
+  .pipe-step p{font-size:12px; color:var(--ink-2); margin:0;}
+  .pipe-step.gatey{border-color:#F1D2D8; background:var(--gate-soft);}
+  .pipe-step.gatey .ps-num{color:var(--gate);}
+  .moat{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px;}
+  .tap{border:1px solid var(--line); border-radius:11px; padding:14px; background:#FAFBFD;}
+  .tap .t-feat{font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--signal); font-weight:600;}
+  .tap p{margin:6px 0 0; font-size:12.5px; color:var(--ink-2);}
+  .roles-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:13px; margin-top:6px;}
+  .rolecard{border:1px solid var(--line); border-radius:12px; padding:15px 16px; background:#FAFBFD;}
+  .rolecard.r-hcp{border-left:3px solid var(--hcp);} .rolecard.r-kol{border-left:3px solid var(--kol);}
+  .rolecard.r-pharma{border-left:3px solid var(--pharma);} .rolecard.r-admin{border-left:3px solid var(--admin);}
+  .rolecard h5{margin:0 0 4px; font-size:15px; display:flex; align-items:center; gap:9px;}
+  .rolecard p{margin:0; font-size:13px; color:var(--ink-2);}
+  .stage-rail{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0;}
+  .stagechip{display:flex; align-items:center; gap:8px; font-size:12.5px; background:#fff; border:1px solid var(--line); border-radius:8px; padding:7px 11px; color:var(--ink);}
+  .stagechip .sc-n{font-family:var(--mono); font-size:10px; font-weight:600; color:#fff; background:var(--hcp); border-radius:4px; width:18px; height:18px; display:grid; place-items:center;}
+  .divider{height:1px; background:var(--line-2); margin:28px 0;}
+
+  footer{max-width:1280px; margin:0 auto; padding:30px 28px 60px; color:var(--ink-3); font-size:12.5px; border-top:1px solid var(--line);}
+  footer b{color:var(--ink-2);}
+
+  @media (max-width:920px){
+    .shell{grid-template-columns:1fr; gap:20px;}
+    .toc{position:relative; top:0; order:-1;}
+    .toc ol{display:grid; grid-template-columns:1fr 1fr; gap:2px;}
+    .layer-cards,.roles-grid,.moat{grid-template-columns:1fr;}
+  }
+  @media (max-width:760px){
+    .fork-cols, .fork-cols.merge{flex-direction:column; align-items:stretch;}
+    .fork-col{border-top:none !important; padding:14px 0 0 14px; border-left:2px dashed #CDD5E1; align-items:flex-start;}
+    .fork-col + .fork-col{margin-top:14px;}
+    .fork-col::before, .fork-col::after{display:none !important;}
+    .fork-col > .riser, .fork-col > .riser-b, .fork-col .fill{display:none !important;}
+    .bpill{margin-bottom:12px;} .bpill::after{display:none;}
+    .scard{width:100%;}
+    .flow-col{align-items:stretch;}
+  }
+  @media (max-width:600px){
+    .topbar-inner,.hero,.shell,footer{padding-left:16px; padding-right:16px;}
+    .panel{padding:22px 18px;}
+    .feature-head{grid-template-columns:1fr; gap:6px;} .feature-num{font-size:24px;}
+    .matrix, .perm{font-size:11.5px;} .matrix th,.matrix td,.perm th,.perm td{padding:8px 8px;}
+  }
+  @media print{
+    .topbar,.toc{display:none;} body{background:#fff;} .shell{grid-template-columns:1fr; display:block;}
+    .panel{box-shadow:none; break-inside:avoid;} section{break-inside:avoid;} .fc-wrap{overflow:visible;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">doc<b>fliq</b> 2.0</div>
+    <div class="topbar-tag">AI Build · User Journey · Confidential</div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="kicker">Decision Note — Journey Blueprint v0.2 · branching view</div>
+  <h1>The AI build, drawn as a <em>clinical pathway</em>.</h1>
+  <p class="hero-lead">Five AI surfaces and one translation capability, mapped end to end. Read each flow top to bottom; at every decision the path forks left and right, and deeper decisions nest as branches inside branches. Every clinical output stops at a human-review gate before it goes live.</p>
+  <div class="rulebanner">
+    <div class="rb-icon">R</div>
+    <div>
+      <p class="rb-title">The one rule that governs every surface</p>
+      <p>AI-assisted, human-reviewed. Nothing clinical is published, shared, or exported without professional review. A contributor's credential can route and weight a source; it never replaces the gate.</p>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <span class="metachip">Build for the doctor first</span>
+    <span class="metachip">Review every output</span>
+    <span class="metachip">Let the data compound</span>
+  </div>
+</div>
+
+<div class="shell">
+  <nav class="toc">
+    <h4>Foundations</h4>
+    <ol class="toc-found"><li><a href="#found">Source model &amp; governance</a></li></ol>
+    <h4>AI Surfaces</h4>
+    <ol>
+      <li><a href="#f1">AI Search</a></li>
+      <li><a href="#f2">Content Studio</a></li>
+      <li><a href="#f3">Case Creator</a></li>
+      <li><a href="#f4">Course &amp; Program Creator</a></li>
+      <li><a href="#f5">Platform Assistant</a></li>
+      <li><a href="#f6">Translation</a></li>
+    </ol>
+    <div class="legend-box">
+      <h4>How to read this</h4>
+      <p class="lg-note">Top to bottom is sequence. A dashed <b>decision</b> card forks the path left and right; branches can hold their own decisions (nesting). Card left-edge colour = who acts.</p>
+      <div class="legend-row"><span class="lg-sw hcp"></span> Step by a doctor (HCP)</div>
+      <div class="legend-row"><span class="lg-sw kol"></span> Step by a KOL / creator</div>
+      <div class="legend-row"><span class="lg-sw pharma"></span> Step by pharma</div>
+      <div class="legend-row"><span class="lg-sw admin"></span> Step by admin / moderator</div>
+      <div class="legend-row"><span class="lg-sw dec"></span> Decision — path forks</div>
+      <div class="legend-row"><span class="lg-sw gate"></span> Human review gate</div>
+      <div class="legend-row"><span class="lg-sw out"></span> Push / export out</div>
+      <div class="legend-row"><span class="sig">&#9672; signal</span> &nbsp;Feeds the data moat</div>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <section id="found">
+      <div class="panel">
+        <div class="eyebrow">Read first — shared machinery behind every feature</div>
+        <h2 class="sec-title">Source model &amp; governance</h2>
+        <p class="sec-intent">Three of the five features pull from external evidence. None touch the open web or the AI's internal knowledge for clinical claims. They draw from one governed catalog, through a personal scope the doctor controls, behind a review gate. Defined once here so the feature flows can reference it.</p>
+
+        <div class="found-block">
+          <div class="found-head"><span class="fh-num">01</span><h3>Two layers, never confused</h3></div>
+          <p class="found-sub">The confusion clears the moment trust (a property of the source, owned centrally) is separated from scope (a choice the doctor makes per session).</p>
+          <div class="layer-cards">
+            <div class="layer l1"><div class="l-eyebrow">Layer 1 — global</div><h5>The Trust Catalog</h5><p>Every AI-usable source sits in one master catalog, tagged <b>Tier</b> (1–3, how far we trust it) × <b>Type</b> (A/B/C, what kind of content it is). A doctor cannot re-rate it.</p><span class="owner admin">owned by Admin / Medical Board</span></div>
+            <div class="layer l2"><div class="l-eyebrow">Layer 2 — per doctor, per session</div><h5>Working Scope</h5><p>When exploring, the doctor picks which tiers and types to draw from for that session. "Pull Tier 2 up into my search" includes it in <i>their</i> session — it does not change the catalog for anyone else.</p><span class="owner hcp">set by each HCP</span></div>
+          </div>
+          <table class="matrix">
+            <thead><tr><th style="width:120px">Trust ↓ Kind →</th><th><span class="tier-pill">TIER 1</span><br>Highest authority</th><th><span class="tier-pill">TIER 2</span><br>Credible secondary</th><th><span class="tier-pill">TIER 3</span><br>Supporting / contextual</th></tr></thead>
+            <tbody>
+              <tr><th>Type A<br><span>Primary evidence</span></th><td><b>Guidelines, RCTs, systematic reviews</b> <span>from official bodies</span></td><td><b>Society position statements</b> <span>reputable reviews</span></td><td><b>Preprints, conference abstracts</b> <span>not yet peer-confirmed</span></td></tr>
+              <tr><th>Type B<br><span>Educational / reference</span></th><td><b>Top-tier textbooks</b> <span>flagship CME</span></td><td><b>Established review articles</b> <span>vetted courses</span></td><td><b>Curated educational web</b> <span>explainers</span></td></tr>
+              <tr><th>Type C<br><span>Contextual / commercial</span></th><td><b>Regulator-cleared product data</b></td><td><b>Pharma material, expert opinion</b></td><td><b>Vetted news, commentary</b></td></tr>
+            </tbody>
+          </table>
+          <div class="note"><span class="n-tag">CONFIRM</span><p><b>This Tier/Type grid is my proposal, not your spec yet.</b> Tier is anchored to the clinical evidence hierarchy so doctors trust it on sight. You still owe me the real definitions of Type A / B / C — send them and I re-key every cell. Everything downstream holds regardless of the labels.</p></div>
+        </div>
+
+        <div class="found-block">
+          <div class="found-head"><span class="fh-num">02</span><h3>Who can touch what</h3></div>
+          <p class="found-sub">Re-tiering and catalog changes follow a permission matrix. The doctor gets full freedom over their own session and zero freedom over everyone else's trust.</p>
+          <table class="perm">
+            <thead><tr><th>Action</th><th>HCP</th><th>KOL / Reviewer</th><th>Admin / Board</th></tr></thead>
+            <tbody>
+              <tr><td>Set own session scope (tiers + types)</td><td class="can">Yes</td><td class="can">Yes</td><td class="can">Yes</td></tr>
+              <tr><td>Promote a tier inside own session only</td><td class="can">Yes</td><td class="can">Yes</td><td class="can">Yes</td></tr>
+              <tr><td>Change a source's global tier / type</td><td class="cant">No — can request</td><td class="propose">Propose</td><td class="can">Yes (owns it)</td></tr>
+              <tr><td>Contribute an uploaded source to the library</td><td class="can">Yes — queue</td><td class="can">Yes — queue</td><td class="can">Yes</td></tr>
+              <tr><td>Approve a contributed source &amp; set final tier</td><td class="cant">No</td><td class="propose">Review</td><td class="can">Final sign-off</td></tr>
+              <tr><td>Edit the catalog scope list shown to users</td><td class="cant">No</td><td class="cant">No</td><td class="can">Yes</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="found-block">
+          <div class="found-head"><span class="fh-num">03</span><h3>Elite uploads — the promotion pipeline</h3></div>
+          <p class="found-sub">A strong PDF from a credentialed doctor should enrich the library, so a junior doctor can later read it as a high-trust resource. The safe path is promotion, not auto-caching. Credential <i>routes and weights</i>; the human reviewer is the gate.</p>
+          <div class="pipe">
+            <div class="pipe-step"><div class="ps-num">01</div><h6>Upload</h6><p>PDF is private to that doctor by default — used only as their own working context. Nothing shared.</p></div>
+            <div class="pipe-step"><div class="ps-num">02</div><h6>Contribute</h6><p>Doctor opts to "Contribute to library." It enters a candidate queue.</p></div>
+            <div class="pipe-step"><div class="ps-num">03</div><h6>Credential weighting</h6><p>System reads the verified profile — institution, qualification, medical-registration number — and attaches a credibility signal that sets a <i>suggested</i> tier and fast-tracks review.</p></div>
+            <div class="pipe-step gatey"><div class="ps-num">04</div><h6>Human review</h6><p>Reviewer checks licence/copyright, patient data, accuracy, relevance — then assigns the <b>final</b> tier &amp; type.</p></div>
+            <div class="pipe-step"><div class="ps-num">05</div><h6>Shared</h6><p>Now discoverable to others within their allowed tiers, badged with the contributor's institution / association.</p></div>
+          </div>
+          <div class="guard"><span class="n-tag">RISK</span><p><b>Copyright is the single biggest risk here.</b> Caching one doctor's paywalled NEJM/Lancet PDF and serving it to others is redistribution. Default-private uploads plus a licence check before any sharing is non-negotiable. Patient data (PHI) gets a scrub/consent step on the same gate. And credential is a routing signal, not a correctness stamp — an elite badge never auto-blesses a file as Tier 1.</p></div>
+        </div>
+
+        <div class="found-block">
+          <div class="found-head"><span class="fh-num">04</span><h3>The unreachable-link nudge</h3></div>
+          <p class="found-sub">Keeps every source the AI uses both reachable and validated.</p>
+          <div class="fc-wrap"><div class="flow-col"><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">AI tries to open a cited link or source</span></div></div></div><div class="fc"><div class="scard dcard"><div class="sc-eyebrow">Decision</div><span class="sc-title">Can it fetch the content?</span></div><span class="trunk"></span><div class="fork-cols merge"><div class="fork-col"><span class="riser"></span><span class="bpill yes">REACHABLE</span><div class="flow-col"><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Use it directly, cited to source + page</span></div></div></div></div><span class="fill"></span><span class="riser-b"></span></div><div class="fork-col"><span class="riser"></span><span class="bpill no">BLOCKED / PAYWALLED / 404</span><div class="flow-col"><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Nudge the user</span></div><p class="sc-body">"I couldn't access this source. Download it and upload it here so I can use it."</p></div></div><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Uploads the file</span></div></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Validate (licence + PHI check)</span></div></div></div></div><span class="fill"></span><span class="riser-b"></span></div></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Source used in the deliverable, cited</span></div></div></div></div></div>
+        </div>
+
+        <div class="found-block">
+          <div class="found-head"><span class="fh-num">05</span><h3>Four roles, one record</h3></div>
+          <div class="roles-grid">
+            <div class="rolecard r-hcp"><h5><span class="role role--hcp">HCP</span> Doctor</h5><p>Explores, learns, builds cases, can contribute uploads. Value accrues here first.</p></div>
+            <div class="rolecard r-kol"><h5><span class="role role--kol">KOL</span> Creator / med team</h5><p>Delivers courses, programs and content into the platform; often also the reviewer.</p></div>
+            <div class="rolecard r-pharma"><h5><span class="role role--pharma">Pharma</span> Sponsor</h5><p>Commissions and tracks; earns feed/campaign visibility once real HCP activity exists.</p></div>
+            <div class="rolecard r-admin"><h5><span class="role role--admin">Admin</span> Moderator / board</h5><p>Owns the catalog, runs every review queue, sets the scope policy and what users may change.</p></div>
+          </div>
+          <div class="divider"></div>
+          <p class="found-sub" style="margin-bottom:0">Six taps into one behavioural record. Every interaction is reviewed and deposits a signal no competitor can buy — the more doctors use the platform, the harder it is to replicate or leave.</p>
+          <div class="moat">
+            <div class="tap"><div class="t-feat">AI Search</div><p>What doctors want — query intent, taps, dwell.</p></div>
+            <div class="tap"><div class="t-feat">Course Assistant</div><p>How they teach — what's created, accepted, rejected.</p></div>
+            <div class="tap"><div class="t-feat">Case Creator</div><p>How they structure clinical reasoning.</p></div>
+            <div class="tap"><div class="t-feat">Content Studio</div><p>Which evidence actually persuades.</p></div>
+            <div class="tap"><div class="t-feat">Platform Assistant</div><p>Where they get stuck — friction &amp; discovery.</p></div>
+            <div class="tap"><div class="t-feat">Translation</div><p>Where they are — language &amp; growing demand.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="f1"><div class="panel">
+      <div class="feature-head"><div class="feature-num">01</div><div>
+        <div class="eyebrow">AI Surface</div><h2 class="sec-title">AI Search</h2>
+        <p class="sec-intent">Intent-aware discovery — finds what the doctor means, not only what they typed, across people, courses, posts, webinars and cases. The front door to the platform.</p>
+        <div class="role-row"><span class="role role--hcp">HCP</span><span class="role role--kol">KOL</span><span class="role role--pharma">Pharma</span><span class="sig">query intent, tap, dwell</span></div>
+      </div></div>
+      <div class="fc-wrap"><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Types a loose phrase in the global search bar</span></div><p class="sc-body">e.g. <code>that beta-blocker trial for heart failure</code> &mdash; vague, partial, conversational.</p></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Parses intent, not the literal string</span></div><p class="sc-body">Maps the phrase to concepts.</p><span class="sig">signal · query intent captured</span></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Returns grouped, specialty-ranked results</span></div><p class="sc-body">People &middot; Courses &middot; Posts &middot; Webinars &middot; Cases. Zero results never blanks &mdash; falls back to "Trending in {specialty}".</p></div></div><div class="fc"><div class="scard dcard"><div class="sc-eyebrow">Decision</div><span class="sc-title">Is a result item locked?</span></div><span class="trunk"></span><div class="fork-cols merge"><div class="fork-col"><span class="riser"></span><span class="bpill yes">UNLOCKED</span><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Opens directly</span></div></div></div></div><span class="fill"></span><span class="riser-b"></span></div><div class="fork-col"><span class="riser"></span><span class="bpill ">LOCKED — shown behind a prompt, never hidden</span><div class="flow-col"><div class="fc"><div class="scard dcard"><div class="sc-eyebrow">Decision</div><span class="sc-title">Why is it locked?</span></div><span class="trunk"></span><div class="fork-cols"><div class="fork-col"><span class="riser"></span><span class="bpill ">UNVERIFIED HCP</span><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">"Verify your credentials to view"</span></div></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Verify flow — item unlocks</span></div></div></div></div></div><div class="fork-col"><span class="riser"></span><span class="bpill ">PREMIUM CONTENT</span><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">"Upgrade to access"</span></div></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Upgrade flow — item unlocks</span></div></div></div></div></div></div></div></div></div><span class="fill"></span><span class="riser-b"></span></div></div></div><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Taps a result and dwells</span></div><p class="sc-body">Every tap and dwell becomes an interest signal.</p><span class="sig">signal · feeds personalisation everywhere else</span></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Personalises future ranking from the accumulated signals</span></div></div></div></div></div>
+      <div class="note"><span class="n-tag">VARIATIONS</span><p><b>KOL</b> — same bar; also gets light hooks into how their own content surfaces. <b>Pharma</b> — sees anonymised, governed discovery trends in their therapy area, never individual HCP queries.</p></div>
+      <div class="guard"><span class="n-tag">BOUNDARY</span><p>Search indexes platform content and the governed catalog. It never invents clinical content and never answers from the AI's general knowledge as if it were platform evidence.</p></div>
+    </div></section>
+
+    <section id="f2"><div class="panel">
+      <div class="feature-head"><div class="feature-num">02</div><div>
+        <div class="eyebrow">AI Surface — formerly Pharma Studio · payment + no-payment modes</div><h2 class="sec-title">Content Studio</h2>
+        <p class="sec-intent">Turns a working session into finished, cited deliverables — slide decks, one-pagers, PDFs, CSV exports — using only trusted sources, behind a review gate. Runs as a standalone three-pane workspace and lives in the Course Creator sidebar. This is the surface that carries the source model.</p>
+        <div class="role-row"><span class="role role--hcp">HCP</span><span class="role role--kol">KOL</span><span class="role role--pharma">Pharma</span><span class="sig">which evidence &amp; shapes get used</span></div>
+      </div></div>
+      <div class="fc-wrap"><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="role role--kol">KOL</span><span class="role role--pharma">Pharma</span><span class="sc-title">Opens Content Studio</span></div><p class="sc-body">Docs rail &middot; chat &middot; artifact panel. Or opens it from inside the Course Creator left sidebar.</p></div></div><div class="fc"><div class="scard dcard"><div class="sc-eyebrow">Decision</div><span class="sc-title">Which mode is the session in?</span></div><span class="trunk"></span><div class="fork-cols merge"><div class="fork-col"><span class="riser"></span><span class="bpill ">NO-PAYMENT (free)</span><div class="flow-col"><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Outputs are watermarked DRAFT</span></div><p class="sc-body">Limited quota and exports.</p></div></div></div><span class="fill"></span><span class="riser-b"></span></div><div class="fork-col"><span class="riser"></span><span class="bpill ">PAYMENT (paid / pharma)</span><div class="flow-col"><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Final outputs, full exports</span></div></div></div></div><span class="fill"></span><span class="riser-b"></span></div></div></div><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">User</span><span class="sc-title">Sets the working scope (Layer 2)</span></div><p class="sc-body">Picks which Tiers (1–3) and Types (A/B/C) to draw from. A role/policy default is pre-set. See Foundations §01.</p></div></div><div class="fc"><div class="scard dcard"><div class="sc-eyebrow">Decision</div><span class="sc-title">Wants to promote a source's tier?</span><p class="sc-body">e.g. pull a Tier 2 society guideline into the session as if Tier 1.</p></div><span class="trunk"></span><div class="fork-cols merge"><div class="fork-col"><span class="riser"></span><span class="bpill yes">ALLOWED FOR THIS USER</span><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Adjust session scope only</span></div><p class="sc-body">Affects this session &mdash; the global catalog is untouched.</p></div></div></div><span class="fill"></span><span class="riser-b"></span></div><div class="fork-col"><span class="riser"></span><span class="bpill no">NOT ALLOWED</span><div class="flow-col"><div class="fc"><div class="scard r-admin"><div class="sc-head"><span class="role role--admin">Admin</span><span class="sc-title">Request routed to a reviewer to propose a global change</span></div><p class="sc-body">Governance branch &mdash; never an instant global edit.</p></div></div></div><span class="fill"></span><span class="riser-b"></span></div></div></div><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">User</span><span class="sc-title">Uploads documents (optional)</span></div><p class="sc-body">Private working context. PHI + licence check on upload. May later be contributed to the library — promotion pipeline (Foundations §03).</p></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Restricted search across the governed catalog in scope</span></div><p class="sc-body">Only the trusted catalog within session scope. Never the open web; never the AI's internal store for clinical claims. If a link is unreachable — the link nudge fires (Foundations §04).</p></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Generates the deliverable</span></div><p class="sc-body">Deck / one-pager / PDF / CSV. Every claim cited to source + page; conflicts flagged.</p></div></div><div class="fc"><div class="scard gcard"><div class="sc-eyebrow">Human review gate</div><span class="sc-title">Reviewer / KOL / board checks claims, citations, conflicts</span><p class="sc-body">Output status is <code>REVIEW REQUIRED</code> and locked until this clears.</p><div class="gate-pills"><span class="gp ok">Approve &rarr; status APPROVED, exportable</span><span class="gp no">Request changes &rarr; back to generate with comments</span></div></div></div><div class="fc"><div class="scard ocard"><div class="sc-eyebrow">Push / export</div><span class="sc-title">Export and / or push the output</span><p class="sc-body">Exports as PPT &middot; PDF &middot; CSV. The same deliverable can also be pushed:</p><div class="dest-grid"><span class="dest">Feed</span><span class="dest">Course material</span><span class="dest">Webinar</span><span class="dest">Campaign<span class="tag-later">FURTHER SCOPE</span></span></div></div></div></div></div>
+      <div class="note"><span class="n-tag">VARIATIONS</span><p><b>HCP</b> — personal deliverables, mostly draft mode unless paid. <b>KOL</b> — builds review-gated educational material; frequently is the reviewer for others. <b>Pharma</b> — commissions evidence-based material, review-gated; earns feed / campaign visibility once HCP activity exists, and tracks downstream usage.</p></div>
+    </div></section>
+
+    <section id="f3"><div class="panel">
+      <div class="feature-head"><div class="feature-num">03</div><div>
+        <div class="eyebrow">AI Surface — the richest learning format</div><h2 class="sec-title">Case Creator</h2>
+        <p class="sec-intent">Upload a PDF, talk to the AI, and it drafts an interactive clinical case across eight stages — animated scenario slides plus timed quizzes. The doctor picks one of three animation templates and the final case renders. AI proposes; the doctor controls; nothing publishes itself.</p>
+        <div class="role-row"><span class="role role--hcp">HCP</span><span class="role role--kol">KOL</span><span class="sig">how doctors structure clinical reasoning</span></div>
+      </div></div>
+      <div class="eyebrow" style="margin-bottom:4px">The eight clinical stages the case maps to</div>
+      <div class="stage-rail">
+        <span class="stagechip"><span class="sc-n">1</span> Presentation</span><span class="stagechip"><span class="sc-n">2</span> History</span><span class="stagechip"><span class="sc-n">3</span> Examination</span><span class="stagechip"><span class="sc-n">4</span> Investigations</span><span class="stagechip"><span class="sc-n">5</span> Differential</span><span class="stagechip"><span class="sc-n">6</span> Diagnosis</span><span class="stagechip"><span class="sc-n">7</span> Management</span><span class="stagechip"><span class="sc-n">8</span> Outcome &amp; follow-up</span>
+      </div>
+      <div class="note"><span class="n-tag">CONFIRM</span><p>These eight stages are my proposed clinical-encounter model. If docfliq already has a fixed eight-stage definition, send it and I'll swap the labels — the flow below doesn't change.</p></div>
+      <div class="fc-wrap"><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Uploads a PDF / pastes case notes, then talks to the AI</span></div><p class="sc-body">PHI check on upload. Chat-driven, not a blank form.</p></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Maps the content into the eight stages, proposes sub-stages</span></div><p class="sc-body">Doctor starts from a structured draft, not a blank page.</p><span class="sig">signal · clinical-reasoning structure</span></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Drafts the case as slides</span></div><p class="sc-body">Scenario slides in animated format &middot; quiz slides carrying quizzes with a timer.</p></div></div><div class="fc"><div class="scard dcard"><div class="sc-eyebrow">Decision</div><span class="sc-title">Per AI suggestion in the non-blocking refinement rail</span><p class="sc-body">The rail offers clinical-language polish &middot; tighter slide text &middot; media captions &middot; draft questions (source sentence shown). AI never edits the case itself &mdash; it only proposes.</p></div><span class="trunk"></span><div class="fork-cols merge"><div class="fork-col"><span class="riser"></span><span class="bpill yes">ACCEPT</span><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Applied to the draft</span></div></div></div></div><span class="fill"></span><span class="riser-b"></span></div><div class="fork-col"><span class="riser"></span><span class="bpill ">ADJUST</span><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Doctor edits, then applies</span></div></div></div></div><span class="fill"></span><span class="riser-b"></span></div><div class="fork-col"><span class="riser"></span><span class="bpill no">DISMISS</span><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Suggestion discarded</span></div></div></div></div><span class="fill"></span><span class="riser-b"></span></div></div></div><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Picks one of three animation templates</span></div></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Renders the final interactive case</span></div><p class="sc-body">Animated scenario + timed quizzes, in the chosen template.</p></div></div><div class="fc"><div class="scard gcard"><div class="sc-eyebrow">Human review gate</div><span class="sc-title">Reviewer / board approves before it goes live anywhere</span><p class="sc-body">It is clinical teaching content, so it clears the gate before any push.</p><div class="gate-pills"><span class="gp ok">Approve &rarr; case is publishable</span><span class="gp no">Request changes &rarr; back to edit</span></div></div></div><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">Learner</span><span class="sc-title">Runs the case, completes the quiz — interaction locks</span></div><p class="sc-body">Once submitted, the quiz interaction is locked.</p></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Shows the case creator the quiz-interaction analytics</span></div><p class="sc-body">What learners answered, where they struggled, timing.</p><span class="sig">signal · quiz interaction data</span></div></div><div class="fc"><div class="scard ocard"><div class="sc-eyebrow">Push / export</div><span class="sc-title">Push the case out</span><p class="sc-body">A case, PDF, or article can be pushed to a campaign — flagged as later scope.</p><div class="dest-grid"><span class="dest">Feed</span><span class="dest">Course material</span><span class="dest">Webinar — during (live) or after (linked)</span><span class="dest">Campaign<span class="tag-later">FURTHER SCOPE</span></span></div></div></div></div></div>
+    </div></section>
+
+    <section id="f4"><div class="panel">
+      <div class="feature-head"><div class="feature-num">04</div><div>
+        <div class="eyebrow">AI Surface — Course Assistant, embedded in the existing wizards</div><h2 class="sec-title">Course &amp; Program Creator</h2>
+        <p class="sec-intent">The Content Studio lives in the left sidebar of the Course Creator throughout. From there the AI drafts the table of contents, the quizzes, and the course materials, and AI Search runs across governed sources. The existing 4-step course wizard and 8-step program wizard are unchanged — the AI sits alongside them.</p>
+        <div class="role-row"><span class="role role--kol">KOL</span><span class="role role--admin">Admin</span><span class="sig">what's created, accepted, rejected</span></div>
+      </div></div>
+      <div class="fc-wrap"><div class="flow-col"><div class="fc"><div class="scard r-kol"><div class="sc-head"><span class="role role--kol">KOL</span><span class="sc-title">Course Setup — wizard step 1</span></div><p class="sc-body">Identity, outcomes, media, scheduling, pricing, instructor, metadata, registration. Programs use the 8-step wizard: Details — Courses — Rules — Certification — Registration — Surveys — Live Sessions — Preview.</p></div></div><div class="fc"><div class="scard r-kol"><div class="sc-head"><span class="role role--kol">KOL</span><span class="sc-title">Build step — Content Studio sidebar is active</span></div><p class="sc-body">Upload a source document, or describe the topic.</p></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Proposes the structure, grounded in the lesson text</span></div><p class="sc-body">Table of contents (modules, lessons, objectives) &middot; draft quizzes grounded in the lesson &middot; course materials &middot; AI Search across governed sources.</p></div></div><div class="fc"><div class="scard dcard"><div class="sc-eyebrow">Decision</div><span class="sc-title">Per proposed item — outline node or question</span><p class="sc-body">If a lesson is empty, the assistant asks for content first rather than inventing questions.</p></div><span class="trunk"></span><div class="fork-cols merge"><div class="fork-col"><span class="riser"></span><span class="bpill yes">ACCEPT / EDIT</span><div class="flow-col"><div class="fc"><div class="scard r-kol"><div class="sc-head"><span class="role role--kol">KOL</span><span class="sc-title">Saved into the course</span></div></div></div></div><span class="fill"></span><span class="riser-b"></span></div><div class="fork-col"><span class="riser"></span><span class="bpill no">REJECT</span><div class="flow-col"><div class="fc"><div class="scard r-kol"><div class="sc-head"><span class="role role--kol">KOL</span><span class="sc-title">Discarded</span></div><p class="sc-body">Nothing publishes on its own.</p><span class="sig">signal · accept / reject map</span></div></div></div><span class="fill"></span><span class="riser-b"></span></div></div></div><div class="fc"><div class="scard r-kol"><div class="sc-head"><span class="role role--kol">KOL</span><span class="sc-title">Rules step — enrolment rules, validity</span></div></div></div><div class="fc"><div class="scard gcard"><div class="sc-eyebrow">Human review gate</div><span class="sc-title">Human review before publish</span><p class="sc-body">Course / program is learning content.</p><div class="gate-pills"><span class="gp ok">Approve &rarr; course goes live</span><span class="gp no">Request changes &rarr; back to edit</span></div></div></div><div class="fc"><div class="scard r-kol"><div class="sc-head"><span class="role role--kol">KOL</span><span class="sc-title">Preview &amp; submit — published</span></div></div></div><div class="fc"><div class="scard ocard"><div class="sc-eyebrow">Push / export</div><span class="sc-title">Cross-links into this surface</span><p class="sc-body">A case or a Content Studio deliverable can be added as course material; in a Program, a case can be linked to a Live Session, during or after.</p><div class="dest-grid"><span class="dest">Case Creator case as material</span><span class="dest">Content Studio deliverable as material</span><span class="dest">Case linked to a Live Session (webinar)</span></div></div></div></div></div>
+    </div></section>
+
+    <section id="f5"><div class="panel">
+      <div class="feature-head"><div class="feature-num">05</div><div>
+        <div class="eyebrow">AI Surface — help &amp; navigation only</div><h2 class="sec-title">Platform Assistant</h2>
+        <p class="sec-intent">A floating assistant on every page that knows the product — features, journeys, sitemap, policies — and guides users to what they need. It does not access clinical data or the content database in this scope.</p>
+        <div class="role-row"><span class="role role--hcp">HCP</span><span class="role role--kol">KOL</span><span class="role role--pharma">Pharma</span><span class="sig">where users get stuck</span></div>
+      </div></div>
+      <div class="fc-wrap"><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="role role--kol">KOL</span><span class="role role--pharma">Pharma</span><span class="sc-title">Asks a product / navigation / policy question</span></div><p class="sc-body">e.g. "where are the cardiology courses?", "how do I download my certificate?"</p></div></div><div class="fc"><div class="scard dcard"><div class="sc-eyebrow">Decision</div><span class="sc-title">About the product, or clinical / the database?</span></div><span class="trunk"></span><div class="fork-cols merge"><div class="fork-col"><span class="riser"></span><span class="bpill yes">PRODUCT / POLICY</span><div class="flow-col"><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Answers with step-by-step guidance + direct links</span></div></div></div></div><span class="fill"></span><span class="riser-b"></span></div><div class="fork-col"><span class="riser"></span><span class="bpill no">CLINICAL / DATABASE / PATIENT ADVICE</span><div class="flow-col"><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Declines and redirects</span></div><p class="sc-body">"I can't give clinical advice &mdash; here's where to find learning on this." Never touches clinical data or the content DB in this scope.</p></div></div></div><span class="fill"></span><span class="riser-b"></span></div></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Logs the friction point</span></div><span class="sig">signal · friction + feature-discovery read</span></div></div></div></div>
+      <div class="guard"><span class="n-tag">BOUNDARY</span><p>Product and policy only. No clinical advice, ever; no answers drawn from the content database in this scope.</p></div>
+    </div></section>
+
+    <section id="f6"><div class="panel">
+      <div class="feature-head"><div class="feature-num">06</div><div>
+        <div class="eyebrow">Cross-cutting capability — sequence as a deliberate forward step</div><h2 class="sec-title">Translation</h2>
+        <p class="sec-intent">Any doctor who works in another language can read platform content and the assistant's guidance on their own. Designed once, the program meets the doctor in their language — the MEA / APAC promise made real (KSA, Vietnam, Indonesia).</p>
+        <div class="role-row"><span class="role role--hcp">HCP</span><span class="sig">language preference, where demand grows</span></div>
+      </div></div>
+      <div class="note"><span class="n-tag">SEQUENCE</span><p><b>The platform is English-only today.</b> Enabling translation is a forward step and should ship as its own sequenced phase, not folded into the five features above.</p></div>
+      <div class="fc-wrap"><div class="flow-col"><div class="fc"><div class="scard r-hcp"><div class="sc-head"><span class="role role--hcp">HCP</span><span class="sc-title">Reaches for the translation control on content</span></div></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Captures the language preference the first time, remembers it after</span></div><span class="sig">signal · language → recommendations + demand map</span></div></div><div class="fc"><div class="scard r-system"><div class="sc-head"><span class="role role--system">System</span><span class="sc-title">Renders content + assistant guidance in the doctor's language</span></div><p class="sc-body">An amber machine-translation note is shown for honesty, with an original / translated toggle.</p></div></div></div></div>
+    </div></section>
+
+  </main>
+</div>
+
+<footer>
+  <b>docfliq 2.0 — AI User Journey Blueprint v0.2 (branching view).</b> &nbsp; A journey map, not final UI. Every decision forks left/right; deeper decisions nest as branches. Review gates and the moderator path are in place for client / moderator review. Open items flagged inline as CONFIRM: the Type A/B/C definitions and the eight-stage case model. Final screens follow once the journey is signed off.
+</footer>
+
+<script>
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+    var map = {};
+    links.forEach(function(a){ var id=a.getAttribute('href').slice(1); var s=document.getElementById(id); if(s) map[id]=a; });
+    if(!('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ links.forEach(function(l){l.classList.remove('active');}); var a=map[e.target.id]; if(a) a.classList.add('active'); }
+      });
+    }, {rootMargin:'-20% 0px -70% 0px', threshold:0});
+    Object.keys(map).forEach(function(id){ obs.observe(document.getElementById(id)); });
+  })();
+</script>
+</body>
+</html>
